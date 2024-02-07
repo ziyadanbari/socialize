@@ -1,11 +1,9 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-
+import { useSession } from "@/exports";
 export default function Home() {
-  const { session, status } = useSession();
-  if (!session && status === "unauthenticated") {
-    redirect("/signin");
-  }
+  const { session, setSession, status } = useSession();
+  if (status === "unauthenticated") redirect("/register");
+  return <div>Hello</div>;
 }
