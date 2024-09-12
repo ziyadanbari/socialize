@@ -43,7 +43,6 @@ export const registerStepsReducer = createSlice({
     builder.addMatcher(
       isAnyOf(registerStepsSubmit.fulfilled, registerStepsSubmit.rejected),
       (state) => {
-        // Set isFinish to true for both fulfilled and rejected cases
         state.isFinish = true;
       }
     );

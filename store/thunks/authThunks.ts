@@ -1,11 +1,11 @@
 import { createUser } from "@/actions/createUser";
 import { CREATE_USER_FAILED_MESSAGE } from "@/constants";
-import { IRegisterStepsReducer } from "@/types";
+import { RegisterForm } from "@/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const registerStepsSubmit = createAsyncThunk(
   "user/register",
-  async (data: Omit<IRegisterStepsReducer, "currentStep">, thunkApi) => {
+  async (data: RegisterForm, thunkApi) => {
     try {
       const user = await createUser({
         ...data,
