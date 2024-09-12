@@ -70,7 +70,7 @@ model PostAttachment {
 }
 
 model User {
-  id                 String             @id
+  id                 String             @id @default(uuid())
   firstname          String
   lastname           String
   username           String             @unique
