@@ -1,0 +1,99 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Follower {
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
+  follower    User   @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User   @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Post {
+  id          String           @id @default(uuid())
+  userId      String
+  title       String?
+  description String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime?
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attachments PostAttachment[]
+  comments    PostComment[]
+  likes       PostLike[]
+}
+
+model PostLike {
+  id     String @id @default(uuid())
+  userId String
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+}
+
+model PostComment {
+  id      String             @id @default(uuid())
+  userId  String
+  postId  String
+  comment String
+  post    Post               @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies PostCommentReply[]
+}
+
+model PostCommentReply {
+  id             String      @id @default(uuid())
+  replyerId      String
+  postId         String
+  comment        String
+  commentReplied PostComment @relation(fields: [postId], references: [id], onDelete: Cascade)
+  replyer        User        @relation(fields: [replyerId], references: [id], onDelete: Cascade)
+}
+
+model PostAttachment {
+  id             String         @id @default(uuid())
+  userId         String
+  postId         String
+  attachmentLink String
+  type           AttachmentType
+  post           Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                 String             @id
+  firstname          String
+  lastname           String
+  username           String             @unique
+  email              String             @unique
+  password           String?
+  provider           Providers          @default(email)
+  profilePic         String             @default("default_pic_url")
+  following          Follower[]         @relation("UserFollowing")
+  followers          Follower[]         @relation("UserFollowers")
+  posts              Post[]
+  postAttachment     PostAttachment[]
+  postComment        PostComment[]
+  postCommentReplies PostCommentReply[]
+  postLike           PostLike[]
+}
+
+enum Providers {
+  google
+  email
+}
+
+enum AttachmentType {
+  file
+  image
+  video
+}

@@ -1,6 +1,8 @@
+
 import type { Metadata } from "next";
 import { Inter as Font } from "next/font/google";
 import "./globals.css";
+import AuthContext from "@/components/AuthContext";
 
 const font = Font({
   subsets: ['latin'],
@@ -21,7 +23,9 @@ export default function RootLayout({
       <body
         className={`${font.className} antialiased`}
       >
-        {children}
+        <AuthContext>
+          {children}
+        </AuthContext>
       </body>
     </html>
   );
