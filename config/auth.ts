@@ -72,7 +72,8 @@ export const authConfig: AuthOptions = {
 
       // Check if the user already exists in your database
       const fetchedUser = await getUser({ email: email as string });
-      if (fetchedUser && fetchedUser.provider === "google") {
+      if (fetchedUser) {
+        if (fetchedUser.provider !== "google") return false;
         // Reassign profile only if necessary
         Object.assign(user, {
           id: fetchedUser.id,
