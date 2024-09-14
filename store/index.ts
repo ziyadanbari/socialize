@@ -1,8 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { rootReducer } from "./reducers";
+import { registerStepsReducer } from "./reducers/registerReducer";
 
 export const store = configureStore({
-  reducer: rootReducer,
+  reducer: {
+    registerStepsReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export type AppStore = typeof store;

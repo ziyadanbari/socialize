@@ -4,12 +4,21 @@ export interface RegisterForm {
   firstname: string;
   lastname: string;
   username: string;
-  profile_pic: File;
+  profilePic?: File;
 }
 
-export interface IRegisterStepsReducer extends RegisterForm {
+export interface ICreationUserStatus {
   currentStep: number;
   userCreated: boolean;
-  isFinish: boolean;
   error: string;
+}
+
+export interface IRegisterStepsReducer
+  extends RegisterForm,
+    ICreationUserStatus {}
+
+export interface LoadingIndicatorProps {
+  size?: number;
+  color?: string;
+  style?: React.CSSProperties;
 }

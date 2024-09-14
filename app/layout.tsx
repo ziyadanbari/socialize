@@ -1,10 +1,10 @@
 
 import type { Metadata } from "next";
 import { Inter as Font } from "next/font/google";
-import AuthContext from "@/components/AuthContext";
-import { Provider } from "react-redux";
-import { store } from "@/store";
 import "./globals.css";
+import AuthProvider from "@/providers/AuthProvider";
+import StoreProvider from "@/providers/StoreProvider";
+import { Toaster } from "@/components/ui/toaster"
 
 const font = Font({
   subsets: ['latin'],
@@ -25,11 +25,12 @@ export default function RootLayout({
       <body
         className={`${font.className} antialiased`}
       >
-        <Provider store={store}>
-          <AuthContext>
+        <StoreProvider>
+          <AuthProvider>
             {children}
-          </AuthContext>
-        </Provider>
+          </AuthProvider>
+        </StoreProvider>
+        <Toaster/>
       </body>
     </html>
   );

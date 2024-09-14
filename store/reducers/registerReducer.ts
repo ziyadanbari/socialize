@@ -1,50 +1,53 @@
-import { IRegisterStepsReducer } from "@/types";
-import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
-import { registerStepsSubmit } from "../thunks/authThunks";
-import { CREATE_USER_FAILED_MESSAGE } from "@/constants";
+import { ICreationUserStatus, IRegisterStepsReducer } from "@/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
   currentStep: 1,
   userCreated: false,
-  isFinish: false,
 } as IRegisterStepsReducer;
 
-export const registerStepsReducer = createSlice({
+const registerStepsSlice = createSlice({
   name: "registerReducer",
   initialState,
   reducers: {
     setFirstStepData(
       state,
-      payload: PayloadAction<
+      action: PayloadAction<
         Pick<
           IRegisterStepsReducer,
           "email" | "password" | "firstname" | "lastname"
         >
       >
     ) {
-      state = { ...state, ...payload, currentStep: 2 };
+      const { email, password, firstname, lastname } = action.payload;
+
+      Object.assign(state, {
+        email,
+        password,
+        firstname,
+        lastname,
+      });
     },
     setSecondStepData(
       state,
-      payload: PayloadAction<
-        Pick<IRegisterStepsReducer, "username" | "profile_pic">
+      action: PayloadAction<
+        Pick<IRegisterStepsReducer, "username" | "profilePic">
       >
     ) {
-      state = { ...state, ...payload, currentStep: 3 };
+      const { username, profilePic } = action.payload;
+      state.username = username;
+      state.profilePic = profilePic;
+    },
+    setCurrentStep(state, action: PayloadAction<number>) {
+      state.currentStep = action.payload;
+    },
+    setCreationUserStatus(state, action: PayloadAction<ICreationUserStatus>) {
+      state.userCreated = action.payload.userCreated;
+      state.error = action.payload.error || "";
     },
   },
-  extraReducers: (builder) => {
-    builder.addCase(registerStepsSubmit.fulfilled, (state, action) => {
-      state.userCreated = action.payload.created;
-    });
-    builder.addCase(registerStepsSubmit.rejected, (state, action) => {
-      state.error = action.error.message || CREATE_USER_FAILED_MESSAGE;
-    });
-    builder.addMatcher(
-      isAnyOf(registerStepsSubmit.fulfilled, registerStepsSubmit.rejected),
-      (state) => {
-        state.isFinish = true;
-      }
-    );
-  },
 });
+
+export const { setFirstStepData, setSecondStepData, setCurrentStep } =
+  registerStepsSlice.actions;
+export const registerStepsReducer = registerStepsSlice.reducer;

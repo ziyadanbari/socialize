@@ -1,5 +1,5 @@
-import { AuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import { AuthOptions, User } from "next-auth";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { signInSchema } from "@/schemas/auth.schema";
 import { getUser } from "@/utils/server/getUser";
@@ -25,7 +25,7 @@ export const authConfig: AuthOptions = {
           throw new Error(validation.error.message);
         }
         const user = await getUser({ email });
-        if (!user || user.provider === "google")
+        if (!user || user.provider !== "email")
           throw new Error("Email/Password are incorrect");
         const isPasswordCorrect = await bcrypt.compare(
           password!,
@@ -47,7 +47,7 @@ export const authConfig: AuthOptions = {
           profilePic,
           firstname,
           lastname,
-        };
+        } as User;
       },
     }),
   ],
@@ -67,7 +67,7 @@ export const authConfig: AuthOptions = {
         family_name: lastname,
         name: username,
         picture: profilePic,
-      } = profile as Record<string, unknown>;
+      } = profile as unknown as GoogleProfile;
 
       if (!email) return false;
 
