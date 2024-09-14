@@ -1,16 +1,9 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/hooks/use-toast'
 import { signOut } from 'next-auth/react'
-import React, { useEffect } from 'react'
+import React from 'react'
 
 const Home = () => {
-  const {toast} = useToast()
-  useEffect(() => {
-    toast({
-      title: "test",
-    })
-  },[])
   return (
     <div>
       <Button variant={"destructive"} onClick={() => {
