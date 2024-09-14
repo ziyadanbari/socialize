@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { registerStepsReducer } from "./reducers/registerReducer";
+import { sidebarReducer } from "./reducers/sidebarReducer";
 
 export const store = configureStore({
   reducer: {
     registerStepsReducer,
+    sidebarReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

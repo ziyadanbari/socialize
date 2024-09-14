@@ -1,18 +1,15 @@
 'use client'
-import { Button } from '@/components/ui/button'
-import { signOut } from 'next-auth/react'
-import React from 'react'
+import Loading from '@/components/Loading'
+import { useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
 
 const Home = () => {
+    const router = useRouter()
+    useEffect(() => {
+        router.replace("/explore")
+    },[router])
   return (
-    <div>
-      <Button variant={"destructive"} onClick={() => {
-        signOut({
-          redirect: false,
-          callbackUrl: "/signin"
-        })
-      }}>Logout</Button>
-    </div>
+    <Loading/>
   )
 }
 
