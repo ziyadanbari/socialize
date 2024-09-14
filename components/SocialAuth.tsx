@@ -8,9 +8,7 @@ const SocialAuth = () => {
   return (
     <div>
         <Button className='gap-4' onClick={() => {
-          signIn('google',{
-            callbackUrl: "/"
-          })
+          signIn('google')
         }}>
             <div>
                 <GoogleIcon/>
