@@ -3,6 +3,9 @@ import { type ISidebarKeys, ISidebarReducer } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 function getCurrentActivePage(): ISidebarKeys {
+  if (typeof window === "undefined") {
+    return "explore"; // Default fallback for server-side rendering
+  }
   const path = window.location.pathname;
   const activePage = sidebarKeysArray.find((key) => path.includes(key));
   return activePage || "explore";
