@@ -1,4 +1,4 @@
-import { AuthOptions, User } from "next-auth";
+import { AuthOptions, Session, User } from "next-auth";
 import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { signInSchema } from "@/schemas/auth.schema";
@@ -136,6 +136,12 @@ export const authConfig: AuthOptions = {
     },
     async session({ session, token }) {
       if (token) session.user = { ...session.user, ...token };
+      if (session.user) {
+        const user = await getUser({
+          id: session.user.id!,
+        });
+        if (!user) return {} as Session;
+      }
       return session;
     },
   },

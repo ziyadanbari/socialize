@@ -1,10 +1,16 @@
-import { SIDEBAR_OPTIONS } from "@/constants";
-import { ISidebarKeys, ISidebarReducer } from "@/types";
+import { SIDEBAR_OPTIONS, sidebarKeysArray } from "@/constants";
+import { type ISidebarKeys, ISidebarReducer } from "@/types";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+function getCurrentActivePage(): ISidebarKeys {
+  const path = window.location.pathname;
+  const activePage = sidebarKeysArray.find((key) => path.includes(key));
+  return activePage || "explore";
+}
 
 const initialState = {
   open: true,
-  activePage: "explore",
+  activePage: getCurrentActivePage(),
   pages: SIDEBAR_OPTIONS,
 } as ISidebarReducer;
 

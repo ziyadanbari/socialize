@@ -26,7 +26,7 @@ export interface LoadingIndicatorProps {
   style?: React.CSSProperties;
 }
 
-export type ISidebarKeys = "explore" | "search" | "profile";
+export type ISidebarKeys = "explore" | "search" | "profile" | "upload";
 
 export interface ISidebarOption {
   label: string;

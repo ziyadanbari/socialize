@@ -12,7 +12,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
     <UnAuthenticatedChecker>
       <div
         className="w-screen h-full flex items-center justify-center">
-        <div className="flex items-center justify-center md:max-w-[50%] xs:max-w-[66%] max-w-[95%] xs:min-w-[500px] xs:w-fit w-full px-8 py-8 rounded-xl bg-white shadow-lg border border-black/30">
+        <div className="flex items-center justify-center md:max-w-[50%] xs:max-w-[66%] xs:min-w-[500px] xs:w-fit w-full xs:p-8 rounded-xl bg-white xs:shadow-lg xs:border border-black/30 pl-2 pr-4 pb-5 pt-10">
           <div className="w-full h-full flex flex-col items-center gap-3">
             <div className="text-3xl font-bold">Socialize</div>
             <div className="w-full">{children}</div>

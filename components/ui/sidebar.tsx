@@ -38,7 +38,6 @@ const SidebarOption = ({
 
 const Sidebar = () => {
   const sidebar = useAppSelector((state) => state.sidebarReducer);
-  console.log(sidebar)
   const dispatch = useAppDispatch();
   const router = useRouter();
   return (
@@ -63,7 +62,7 @@ const Sidebar = () => {
           label="Logout"
           icon={LogOut}
           buttonVariant={"destructive"}
-          action={() => signOut}
+          action={() => signOut()}
         />
       </div>
     </div>

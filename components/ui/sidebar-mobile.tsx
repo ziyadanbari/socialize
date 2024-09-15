@@ -33,7 +33,6 @@ const SidebarOption = ({
 };
 const SidebarMobile = () => {
   const sidebar = useAppSelector((state) => state.sidebarReducer);
-  console.log(sidebar)
   const dispatch = useAppDispatch();
   const router = useRouter();
   return (

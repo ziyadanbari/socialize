@@ -20,7 +20,7 @@ model Follower {
 model Post {
   id          String           @id @default(uuid())
   userId      String
-  title       String?
+  title       String
   description String?
   createdAt   DateTime         @default(now())
   updatedAt   DateTime?
@@ -61,12 +61,10 @@ model PostCommentReply {
 
 model PostAttachment {
   id             String         @id @default(uuid())
-  userId         String
   postId         String
   attachmentLink String
   type           AttachmentType
   post           Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -81,7 +79,6 @@ model User {
   following          Follower[]         @relation("UserFollowing")
   followers          Follower[]         @relation("UserFollowers")
   posts              Post[]
-  postAttachment     PostAttachment[]
   postComment        PostComment[]
   postCommentReplies PostCommentReply[]
   postLike           PostLike[]
@@ -93,7 +90,6 @@ enum Providers {
 }
 
 enum AttachmentType {
-  file
   image
   video
 }

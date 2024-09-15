@@ -5,7 +5,7 @@ import React, { ReactNode } from 'react'
 
 const AuthProvider = ({children}: {children: ReactNode}) => {
   return (  
-    <SessionProvider>
+    <SessionProvider refetchInterval={5 * 60}>
         {children}
     </SessionProvider>
   )

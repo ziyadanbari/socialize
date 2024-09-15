@@ -27,7 +27,7 @@ import { DEFAULT_PROFILE_PICTURE } from "@/constants";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { createUser } from "@/actions/createUser";
-import { imageToBase64 } from "@/utils/imageToBase64";
+import { imageToBase64 } from "@/utils/fileToBase64";
 import { checkUserAvailability } from "@/actions/checkUserAvailability";
 import { useToast } from "@/hooks/use-toast";
 import { signIn } from "next-auth/react";
