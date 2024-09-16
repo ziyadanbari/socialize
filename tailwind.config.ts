@@ -12,6 +12,9 @@ const config: Config = {
       screens: {
         xs: "540px",
       },
+      gridTemplateColumns: {
+        posts: "repeat(auto-fill, minmax(240px,1fr))",
+      },
       colors: {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",

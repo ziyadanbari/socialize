@@ -4,11 +4,11 @@ import { authConfig } from "@/config/auth";
 import { prisma } from "@/db";
 import { uploadPostSchema } from "@/schemas/upload.schema";
 import { ActionError } from "@/utils/errors/serverAction.error";
-import { put } from "@vercel/blob";
 import { getServerSession } from "next-auth";
 import { z } from "zod";
 import crypto from "crypto";
 import { PostAttachment } from "@prisma/client";
+import { uploadFile } from "@/utils/server/uploadFile";
 
 interface Params extends z.infer<typeof uploadPostSchema> {}
 interface IUploadedAttachment {
@@ -26,10 +26,8 @@ async function uploadAttachments(attachments: Params["attachments"]) {
         type === "video" ? "mp4" : "png"
       }`;
       file = (file as string).replace(/^data:(image|video)\/\w+;base64,/, "");
-      const fileBuffer = Buffer.from(file, "base64");
-      const blob = await put(fileName, fileBuffer, {
-        access: "public",
-      });
+      const { uploaded, blob } = await uploadFile({ base64: file, fileName });
+      if (!uploaded || !blob) continue;
       uploadedAttachments.push({
         type,
         link: blob.url,
@@ -78,6 +76,7 @@ export async function uploadPost({ title, description, attachments }: Params) {
     return {
       created: true,
       message: "Post uploaded successfully",
+      postId: newPost.id,
     };
   } catch (error: unknown) {
     console.log(error);

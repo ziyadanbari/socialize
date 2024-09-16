@@ -5,6 +5,11 @@ import { signInSchema } from "@/schemas/auth.schema";
 import { getUser } from "@/utils/server/getUser";
 import bcrypt from "bcrypt";
 import { createUser } from "@/utils/server/createUser";
+import jwt from "jsonwebtoken";
+import { JWT } from "next-auth/jwt";
+import { prisma } from "@/db";
+
+const ONE_YEAR_MS = new Date().setFullYear(new Date().getFullYear() + 1);
 
 export const authConfig: AuthOptions = {
   providers: [
@@ -53,6 +58,73 @@ export const authConfig: AuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: ONE_YEAR_MS,
+  },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true, // Ensure security
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        expires: new Date(ONE_YEAR_MS),
+      },
+    },
+  },
+  jwt: {
+    async encode({ token, secret, maxAge }) {
+      try {
+        delete token?.iat;
+        delete token?.exp;
+        const encodedToken = jwt.sign(token as object, secret, {
+          expiresIn: maxAge,
+          algorithm: "HS256",
+        });
+        try {
+          await prisma.session.create({
+            data: {
+              sessionToken: encodedToken,
+              user: {
+                connect: {
+                  id: token?.id as string,
+                },
+              },
+              expires: new Date(maxAge as number),
+            },
+          });
+        } catch (error: unknown) {}
+        return encodedToken;
+      } catch (error) {
+        console.error("JWT Encode Error:", error);
+        return "";
+      }
+    },
+    async decode({ token, secret }) {
+      try {
+        const decodedToken = jwt.verify(token || "", secret, {
+          algorithms: ["HS256"],
+        }) as JWT;
+        const isTokenValid = await prisma.session.findFirst({
+          where: {
+            sessionToken: token,
+            user: {
+              id: decodedToken?.id as string,
+            },
+            expires: {
+              lt: decodedToken?.exp
+                ? new Date(decodedToken?.exp as number)
+                : new Date(),
+            },
+          },
+        });
+        if (!isTokenValid) throw new Error("session token invalid");
+        return decodedToken;
+      } catch (error) {
+        console.error("JWT Decode Error:", error);
+        return {} as JWT;
+      }
+    },
   },
   pages: {
     signIn: "/signin",

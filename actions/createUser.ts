@@ -3,10 +3,10 @@ import { prisma } from "@/db";
 import { signUpFirstStepSchema } from "@/schemas/auth.schema";
 import { Providers } from "@prisma/client";
 import { checkUserAvailability } from "./checkUserAvailability";
-import { put } from "@vercel/blob";
 import crypto from "crypto";
 import { DEFAULT_PROFILE_PICTURE } from "@/constants";
 import bcrypt from "bcrypt";
+import { uploadFile } from "@/utils/server/uploadFile";
 interface Props {
   email: string;
   username: string;
@@ -43,15 +43,16 @@ export async function createUser({
     });
     if (!isUserAvailable) return { created: false, error: error?.message };
     if (profilePic) {
-      const blob = await put(
-        `${crypto.randomBytes(10).toString("hex")}.jpg`,
-        profilePic,
-        {
-          access: "public",
-          addRandomSuffix: true,
-        }
+      const cleanBase64ProfilePic = (profilePic as string).replace(
+        /^data:image\/\w+;base64,/,
+        ""
       );
-      profilePic = blob.url;
+      const fileName = `${crypto.randomBytes(10).toString("hex")}.png`;
+      const { uploaded, blob } = await uploadFile({
+        fileName,
+        base64: cleanBase64ProfilePic,
+      });
+      if (uploaded && blob) profilePic = blob.url;
     }
     const user = await prisma.user.create({
       data: {

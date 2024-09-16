@@ -16,20 +16,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { CloudUpload, Trash2Icon } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"; // Assuming you have a Carousel component from shadcn
-import Image from "next/image";
 import { FastAverageColor } from "fast-average-color";
 import { type CarouselApi } from "@/components/ui/carousel";
 import axios from "axios";
 import { fileToBase64 } from "@/utils/fileToBase64";
 import { useToast } from "@/hooks/use-toast";
 import { ActionError } from "@/utils/errors/serverAction.error";
+import AttachmentSlider from "@/components/attachment-slider";
+import { useRouter } from "next/navigation";
 
 type FormType = z.infer<typeof uploadPostSchema>;
 
@@ -45,6 +39,7 @@ const Upload = () => {
       attachments: [],
     },
   });
+  const router = useRouter()
   const { toast } = useToast();
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
   const [isLoading, setIsLoading] = useState(false);
@@ -74,6 +69,7 @@ const Upload = () => {
         created: boolean;
         message?: string;
         error?: undefined;
+        postId?: string
       };
       if (!response.created)
         throw new ActionError(response?.error || "Something went wrong!");
@@ -81,6 +77,7 @@ const Upload = () => {
         title: "Post uploaded successfully",
         variant: "success",
       });
+      router.push(`/explore/${response.postId}`)
     } catch (error: unknown) {
       toast({
         title: (error as ActionError).actionError || "",
@@ -163,31 +160,10 @@ const Upload = () => {
           onSubmit={uploadForm.handleSubmit(onSubmit)}
           className="flex flex-col gap-4">
           {previewFiles.length > 0 && (
-            <Carousel className="w-[85%] mx-auto" setApi={setCarouselApi}>
-              <CarouselContent>
-                {previewFiles.map((file, index) => (
-                  <CarouselItem
-                    className="max:w-64 w-full aspect-[9/4] relative select-none"
-                    style={{
-                      background: file.backgroundColor ?? "black",
-                    }}
-                    key={index}>
-                    <div>
-                      {file.type === "image" ? (
-                        <Image
-                          src={file.base64}
-                          alt={`Preview ${index}`}
-                          layout="fill"
-                          objectFit="contain"
-                        />
-                      ) : (
-                        <video
-                          src={file.file}
-                          controls
-                          className="w-full h-full"
-                        />
-                      )}
-                    </div>
+            <AttachmentSlider
+              customDom={
+                (_file,index) => (
+                  <>
                     <div className="absolute top-4 right-4">
                       <Button
                         variant={"destructive"}
@@ -201,12 +177,13 @@ const Upload = () => {
                         <Trash2Icon />
                       </Button>
                     </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+                  </>
+                )
+              }
+              attachments={previewFiles}
+              setCarouselApi={setCarouselApi}
+              carouselApi={carouselApi}
+            />
           )}
           {!previewFiles.length ? (
             <FormField
@@ -308,10 +285,18 @@ const Upload = () => {
 
           <Button
             type="submit"
-            loading={uploadProgress === undefined || uploadProgress === 100 ? isLoading : false}
+            loading={
+              uploadProgress === undefined || uploadProgress === 100
+                ? isLoading
+                : false
+            }
             className="gap-3"
             style={{
-              background:  uploadProgress === undefined || uploadProgress === 100 ? "" : `linear-gradient(to right,  green ${uploadProgress}%, black ${uploadProgress}%)`            }}>
+              background:
+                uploadProgress === undefined || uploadProgress === 100
+                  ? ""
+                  : `linear-gradient(to right,  green ${uploadProgress}%, black ${uploadProgress}%)`,
+            }}>
             {uploadProgress !== undefined && isLoading ? (
               `${uploadProgress}%`
             ) : (

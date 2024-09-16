@@ -11,8 +11,8 @@ model Follower {
   id          String @id @default(uuid())
   followerId  String
   followingId String
-  follower    User   @relation("UserFollowing", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User   @relation("UserFollowers", fields: [followingId], references: [id], onDelete: Cascade)
+  follower    User   @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User   @relation("UserFollowings", fields: [followingId], references: [id], onDelete: Cascade)
 
   @@unique([followerId, followingId])
 }
@@ -76,12 +76,22 @@ model User {
   password           String?
   provider           Providers          @default(email)
   profilePic         String             @default("default_pic_url")
-  following          Follower[]         @relation("UserFollowing")
+  followings          Follower[]         @relation("UserFollowings")
   followers          Follower[]         @relation("UserFollowers")
   posts              Post[]
   postComment        PostComment[]
   postCommentReplies PostCommentReply[]
   postLike           PostLike[]
+  sessions      Session[]
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum Providers {

@@ -17,7 +17,7 @@ const AuthenticatedLayout = ({ children }: { children: ReactNode }) => {
             <Navbar/>
           </div>
           <div className="mx-auto overflow-auto flex-1 w-full">
-            <div className="w-full xs:py-5 p-4 ">
+            <div className="w-full xs:py-5 py-4 px-2 ">
               {children}
             </div>
           </div>
