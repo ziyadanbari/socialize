@@ -1,4 +1,4 @@
-import SignUpStepsChecker from "@/components/SignUpStepsChecker"
+import SignUpStepsChecker from "@/components/signup-steps-checker"
 import { ReactNode } from "react"
 
 const SignUpLayout = ({children}:{children: ReactNode}) => {

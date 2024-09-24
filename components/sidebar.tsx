@@ -3,7 +3,7 @@ import { SIDEBAR_OPTIONS } from "@/constants";
 import { useAppDispatch, useAppSelector } from "@/hooks/app";
 import { ISidebarOption } from "@/types";
 import React from "react";
-import { Button, buttonVariants } from "./button";
+import { Button, buttonVariants } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { VariantProps } from "class-variance-authority";
 import { LogOut } from "lucide-react";

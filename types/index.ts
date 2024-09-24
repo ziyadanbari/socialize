@@ -4,6 +4,12 @@ import { Dispatch, ElementType, SetStateAction } from "react";
 
 export type ISidebarKeys = "explore" | "search" | "profile" | "upload";
 export type SetState<T> = Dispatch<SetStateAction<T>>;
+export type IAttachment = {
+  id?: string;
+  type: AttachmentType;
+  file: string;
+  backgroundColor?: string;
+};
 
 export interface RegisterForm {
   email: string;
@@ -64,6 +70,7 @@ export interface Following {
 }
 
 export interface Attachment {
+  id: string;
   type: AttachmentType;
   attachmentLink: string;
 }
@@ -73,6 +80,7 @@ export interface Post {
   title: string;
   description: string | null;
   attachments: Attachment[];
+  user?: Partial<UserProfile>;
 }
 
 // Define the main UserProfile type using the new types

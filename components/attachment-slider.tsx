@@ -8,14 +8,8 @@ import {
   CarouselPrevious,
 } from "./ui/carousel";
 import Image from "next/image";
-import { SetState } from "@/types";
+import { IAttachment, SetState } from "@/types";
 import { Badge } from "./ui/badge";
-
-type IAttachment = {
-  type: "image" | "video";
-  file: string;
-  backgroundColor?: string;
-};
 
 const AttachmentSlider = ({
   customDom,
@@ -23,14 +17,14 @@ const AttachmentSlider = ({
   setCarouselApi,
   carouselApi,
   showSlideIndex = true,
-  aspectRatio
+  aspectRatio,
 }: {
   customDom?: (file: IAttachment, index: number) => ReactNode;
   setCarouselApi: SetState<CarouselApi>;
   carouselApi: CarouselApi;
   attachments: IAttachment[];
   showSlideIndex?: boolean;
-  aspectRatio?: number,
+  aspectRatio?: number;
 }) => {
   const [currentAttachmentIndex, setCurrentAttachmentIndex] =
     useState<number>();
@@ -38,10 +32,13 @@ const AttachmentSlider = ({
     carouselApi?.on("select", (api) => {
       setCurrentAttachmentIndex(api.selectedScrollSnap());
     });
+    carouselApi?.on("slidesChanged", (api) => {
+      setCurrentAttachmentIndex(api.selectedScrollSnap());
+    });
   }, [carouselApi]);
-  (currentAttachmentIndex);
+  currentAttachmentIndex;
   return (
-    <Carousel className="w-[85%] mx-auto" setApi={setCarouselApi}>
+    <Carousel className="w-full h-full mx-auto" setApi={setCarouselApi}>
       {showSlideIndex ? (
         <div className="absolute  top-4 left-4 z-50">
           <Badge variant={"secondary"}>
@@ -55,7 +52,7 @@ const AttachmentSlider = ({
             className="w-full aspect-[9/5] relative select-none"
             style={{
               background: file.backgroundColor ?? "black",
-              aspectRatio: aspectRatio
+              aspectRatio: aspectRatio,
             }}
             key={index}>
             <div className="relative w-full h-full">
@@ -74,8 +71,12 @@ const AttachmentSlider = ({
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      {attachments.length > 1 ? (
+        <>
+          <CarouselPrevious />
+          <CarouselNext />{" "}
+        </>
+      ) : null}
     </Carousel>
   );
 };

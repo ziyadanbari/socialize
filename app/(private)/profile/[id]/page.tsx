@@ -10,6 +10,8 @@ import { useSession } from "next-auth/react";
 import { Avatar,AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import PostThumbnail from "@/components/post-thumbnail";
+import { useAppDispatch, useAppSelector } from "@/hooks/app";
+import { setPosts } from "@/store/reducers/postsReducer";
 
 const StatisticNumber = ({
   number,
@@ -26,9 +28,10 @@ const StatisticNumber = ({
   );
 };
 
-const ProfileId = () => {
-  const { id } = useParams();
+const ProfileId = ({params: {id}}: {params: {id:string}}) => {
   const [user, setUser] = useState<UserProfile>();
+  const posts = useAppSelector(state => state.postsReducer.posts)
+  const dispatch = useAppDispatch()
   const {
     username,
     firstname,
@@ -36,11 +39,9 @@ const ProfileId = () => {
     profilePic,
     followers,
     followings,
-    posts,
   } = user || {};
   const { data } = useSession();
   const { user: currentUser } = data || {};
-  const isOwnUser = currentUser?.id === user?.id;
   const numbers = [
     {
       label: "Posts",
@@ -62,7 +63,11 @@ const ProfileId = () => {
         const { user, error } = await getUserProfile(id as string);
         if (!user) throw new ActionError(error || "Something went wrong");
         setUser(user);
+        if (user.posts) {
+          dispatch(setPosts(user.posts))
+        }
       } catch (error: unknown) {
+        console.log(error)
         toast({
           title:
             error instanceof ActionError

@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Avatar, AvatarImage } from './avatar'
+import { Avatar, AvatarImage } from './ui/avatar'
 import { useSession } from 'next-auth/react'
 
 const Navbar = () => {

@@ -1,5 +1,5 @@
 "use client";
-import Loading from "@/components/Loading";
+import Loading from "@/components/loading";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { ReactNode, useEffect } from 'react';

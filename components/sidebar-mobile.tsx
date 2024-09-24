@@ -1,7 +1,7 @@
 'use client'
 import { SIDEBAR_OPTIONS } from '@/constants'
 import React from 'react'
-import { Button, buttonVariants } from './button'
+import { Button, buttonVariants } from './ui/button'
 import { VariantProps } from 'class-variance-authority';
 import { ISidebarOption } from '@/types';
 import { useAppDispatch, useAppSelector } from '@/hooks/app';

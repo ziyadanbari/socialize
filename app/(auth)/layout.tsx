@@ -1,7 +1,7 @@
 'use client'
-import UnAuthenticatedChecker from "@/components/UnAuthenticatedChecker";
+import UnAuthenticatedChecker from "@/components/unauthenticated-checker";
 import { ReactNode } from "react";
-import SocialAuth from "@/components/SocialAuth";
+import SocialAuth from "@/components/social-auth";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
