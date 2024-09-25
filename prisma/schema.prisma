@@ -13,6 +13,8 @@ model Follower {
   followingId String
   follower    User   @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
   following   User   @relation("UserFollowings", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@unique([followerId, followingId])
 }
@@ -23,7 +25,7 @@ model Post {
   title       String
   description String?
   createdAt   DateTime         @default(now())
-  updatedAt   DateTime?
+  updatedAt   DateTime         @updatedAt @default(now()) // Added @updatedAt and default value
   user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   attachments PostAttachment[]
   comments    PostComment[]
@@ -31,23 +33,27 @@ model Post {
 }
 
 model PostLike {
-  id     String @id @default(uuid())
-  userId String
-  postId String
-  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String @id @default(uuid())
+  userId    String
+  postId    String
+  post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now()) // Added @updatedAt and default value
 
   @@unique([userId, postId])
 }
 
 model PostComment {
-  id      String             @id @default(uuid())
-  userId  String
-  postId  String
-  comment String
-  post    Post               @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user    User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  replies PostCommentReply[]
+  id        String             @id @default(uuid())
+  userId    String
+  postId    String
+  comment   String
+  post      Post               @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies   PostCommentReply[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt @default(now()) // Added @updatedAt and default value
 }
 
 model PostCommentReply {
@@ -57,6 +63,8 @@ model PostCommentReply {
   comment        String
   commentReplied PostComment @relation(fields: [postId], references: [id], onDelete: Cascade)
   replyer        User        @relation(fields: [replyerId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt @default(now()) // Added @updatedAt and default value
 }
 
 model PostAttachment {
@@ -65,6 +73,8 @@ model PostAttachment {
   attachmentLink String
   type           AttachmentType
   post           Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt @default(now()) // Added @updatedAt and default value
 }
 
 model User {
@@ -76,13 +86,15 @@ model User {
   password           String?
   provider           Providers          @default(email)
   profilePic         String             @default("default_pic_url")
-  followings          Follower[]         @relation("UserFollowings")
+  followings         Follower[]         @relation("UserFollowings")
   followers          Follower[]         @relation("UserFollowers")
   posts              Post[]
   postComment        PostComment[]
   postCommentReplies PostCommentReply[]
   postLike           PostLike[]
-  sessions      Session[]
+  sessions           Session[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt @default(now()) // Added @updatedAt and default value
 }
 
 model Session {

@@ -21,7 +21,6 @@ const PostPage = ({ postId, editPage = false }: { postId: string, editPage?: boo
   const { toast } = useToast();
   const posts = useAppSelector(state => state.postsReducer.posts)  
   const [post, setPost] = useState<IPost>();
-  console.log(post)
   const isOwner = user?.id === post?.user?.id
   useEffect(() => {
     async function getPostById() {
@@ -45,7 +44,7 @@ const PostPage = ({ postId, editPage = false }: { postId: string, editPage?: boo
       } catch (error: unknown) {
         console.log(error);
         toast({
-          title:
+          title: 
             error instanceof ActionError
               ? error.actionError
               : "Something went wrong!",

@@ -91,11 +91,10 @@ const PostEditForm: React.FC<PostEditFormProps> = ({ post, onPostUpdate }) => {
       setIsLoading(false);
     }
   };
-  console.log('edit page')
   return (
     <Form {...form}>
       <form
-        className="flex items-start justify-center sm:flex-row flex-col [&>*]:flex-1 gap-3"
+        className="flex items-start justify-center md:flex-row flex-col [&>*]:flex-1 gap-3"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="w-full h-full rounded-md overflow-hidden relative">

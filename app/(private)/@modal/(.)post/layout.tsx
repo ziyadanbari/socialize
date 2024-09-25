@@ -1,10 +1,17 @@
 "use client";
-import React from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 const PostModalLayout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
+  const query = useSearchParams()
+  const isModal = query.get("modal")
+  useEffect(() => {
+    if (JSON.parse(isModal || "true") === false) {
+      window.location.reload()
+    }
+  },[isModal])
   return (
     <>
       <Dialog

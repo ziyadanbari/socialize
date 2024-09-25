@@ -1,11 +1,15 @@
 import { Prisma } from "@prisma/client";
 
-export const userProfilePopulate: Prisma.UserSelect = {
+export const userInfoPopulate: Prisma.UserSelect = {
   id: true,
   username: true,
   firstname: true,
   lastname: true,
   profilePic: true,
+};
+
+export const userProfilePopulate: Prisma.UserSelect = {
+  ...userInfoPopulate,
   followers: {
     select: {
       follower: {

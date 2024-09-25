@@ -77,7 +77,7 @@ const Upload = () => {
         title: "Post uploaded successfully",
         variant: "success",
       });
-      router.push(`/explore/${response.postId}`)
+      router.push(`/post/${response.postId}?modal=false`)
     } catch (error: unknown) {
       toast({
         title: (error as ActionError).actionError || "",
@@ -180,6 +180,7 @@ const Upload = () => {
                   </>
                 )
               }
+              aspectRatio={9 / 8}
               attachments={previewFiles}
               setCarouselApi={setCarouselApi}
               carouselApi={carouselApi}

@@ -1,5 +1,5 @@
 import { Post } from "@/types";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, current, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState = {
   posts: [],
@@ -18,11 +18,16 @@ const postsSlice = createSlice({
     setPosts(state, action: PayloadAction<Post[]>) {
       state.posts = action.payload;
     },
-    editPost(state, action: PayloadAction<{ id: string; post: Post }>) {
+    editPost(
+      state,
+      action: PayloadAction<{ id: string; post: Partial<Post> }>
+    ) {
       const { id, post: updatedPost } = action.payload;
-      state.posts = state.posts.map((post) =>
-        post.id === id ? updatedPost : post
-      );
+
+      const newPosts = current(state).posts.map((post) => {
+        return post.id === id ? { ...post, ...updatedPost } : post;
+      });
+      state.posts = newPosts;
     },
   },
 });

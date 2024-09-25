@@ -21,8 +21,38 @@ export async function getPost(id: string) {
           },
         },
         attachments: true,
+        comments: {
+          orderBy: {
+            createdAt: "desc", // Sort comments by creation date in descending order
+          },
+          include: {
+            user: {
+              select: {
+                id: true,
+                username: true,
+                firstname: true,
+                lastname: true,
+                profilePic: true,
+              },
+            },
+            replies: {
+              include: {
+                replyer: {
+                  select: {
+                    id: true,
+                    username: true,
+                    firstname: true,
+                    lastname: true,
+                    profilePic: true,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     });
+
     return { post };
   } catch (error: unknown) {
     console.log(error);

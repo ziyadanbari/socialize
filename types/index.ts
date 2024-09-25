@@ -50,7 +50,6 @@ export interface ISidebarReducer {
   pages: ISidebarOption[];
 }
 
-// Define types for individual items in arrays
 export interface Follower {
   follower: {
     username: string;
@@ -75,15 +74,30 @@ export interface Attachment {
   attachmentLink: string;
 }
 
+export interface PostComment {
+  id: string;
+  comment: string;
+  replies?: PostCommentReply[];
+  user?: Partial<UserProfile>;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PostCommentReply {
+  id: string;
+  comment: string;
+  replyer?: Partial<UserProfile>;
+}
+
 export interface Post {
   id: string;
   title: string;
   description: string | null;
   attachments: Attachment[];
+  comments?: PostComment[];
   user?: Partial<UserProfile>;
 }
 
-// Define the main UserProfile type using the new types
 export interface UserProfile {
   id: string;
   username: string;
